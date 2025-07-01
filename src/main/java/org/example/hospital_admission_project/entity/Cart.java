@@ -10,8 +10,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

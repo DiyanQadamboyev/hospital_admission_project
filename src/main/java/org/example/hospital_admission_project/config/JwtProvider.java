@@ -6,10 +6,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.example.hospital_admission_project.entity.Doctor;
+import org.example.hospital_admission_project.entity.User;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 
 import java.util.Date;
@@ -17,7 +22,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
-    public static final String key = "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3";
+    private final CustomUserDetailsService customUserDetailsService;
 
     public String generateToken(String  email){
         Long expireTimeout = (long) (20 * 24 * 60 * 60 * 1000);
@@ -31,7 +36,25 @@ public class JwtProvider {
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+    public void setUserToContext(String email) {
+        try {
 
+            User user = (User) customUserDetailsService.loadUserByUsername(email);
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } catch (Exception e1) {
+            try {
+
+                Doctor doctor = (Doctor) customUserDetailsService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(doctor, null, doctor.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } catch (Exception e2) {
+                throw new RuntimeException("User or Doctor not found in authentication.");
+            }
+        }
+    }
     public String getUsernameFromToken(String token){
         Claims claims = getClaims(token);
         return claims.getSubject();
@@ -44,6 +67,6 @@ public class JwtProvider {
                 .parseClaimsJws(token).getBody();
     }
     public Key getKey(){
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
-    }
+            return Keys.hmacShaKeyFor("secr213frvdqw1er23fg3tvewfq3grtvefcdet".getBytes());
+        }
 }

@@ -34,11 +34,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final DoctorRepository doctorRepository;
     private final JwtProvider jwtProvider;
-    private final JavaMailSender mailSender; // xatolik mavjud
     private final JwtAuthenticatorFilter jwtAuthenticator;
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationCodeRepository confirmationCodeRepository;
-
     @Override
     public ResponseEntity<?> signUp(UserDto userDto) {
         if (userRepository.existsByEmail((userDto.getEmail()))){
@@ -108,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
             message.setTo(email);
             message.setSubject("Parolni yangilash uchun tasdiqlash kodi");
             message.setText("Sizning tasdiqlash kodingiz: " + otpCode);
-            mailSender.send(message);
+            /// ////
         } catch (MailException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new SendMessage(false, "Email yuborishda xato", null));

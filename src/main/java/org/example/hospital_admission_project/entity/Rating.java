@@ -11,15 +11,13 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @ElementCollection
-    private List<Long> usersId;
-    private Long ownerId;
+    private List<Integer> usersId;
+    private Integer ownerId;
     private Double ownerRating;
     @ElementCollection
     private List<Double> ratings = new ArrayList<>();

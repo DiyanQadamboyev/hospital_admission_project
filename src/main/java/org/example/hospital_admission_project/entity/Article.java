@@ -9,8 +9,6 @@ import java.sql.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

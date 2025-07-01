@@ -11,8 +11,6 @@ import lombok.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Consultation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,8 +10,6 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class ArticleCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

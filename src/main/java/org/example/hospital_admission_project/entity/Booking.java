@@ -10,8 +10,6 @@ import org.example.hospital_admission_project.entity.enums.ConsultationStatus;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
