@@ -16,7 +16,7 @@ import java.time.Instant;
 public class ConfirmationCode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(nullable = false , unique = true )
     private String code;
     @Email(message = "")

@@ -15,7 +15,7 @@ public class Consultation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Long doctorId;
+    private Integer doctorId;
     private Double adminPrice;
     private Double DoctorPrice;
     private Double discount;

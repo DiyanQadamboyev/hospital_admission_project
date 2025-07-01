@@ -13,8 +13,8 @@ import java.util.List;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long userId;
+    private Integer id;
+    private Integer userId;
     @ManyToMany
     private List<CartProduct> products = new ArrayList<>();
 
