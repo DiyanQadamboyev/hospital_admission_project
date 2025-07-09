@@ -83,7 +83,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.CREATED).body(new SendMessage(true, "Doctor successfully saved!", doctor));
     }
 
-    public ResponseEntity<?> addRating(Integer doctorId, Double rating) {
+    public ResponseEntity<?> addRating(Long doctorId, Double rating) {
 
         Optional<Doctor> optionalDoctor = doctorRepository.findById(doctorId);
         if (optionalDoctor.isEmpty()) {
@@ -92,7 +92,7 @@ public class DoctorService {
         Doctor doctor = optionalDoctor.get();
         Optional<Rating> optionalRating = ratingRepository.findByOwnerId(doctorId);
         Rating rating1 = optionalRating.get();
-        for (Integer l : rating1.getUsersId()) {
+        for (Long l : rating1.getUsersId()) {
             if (l.equals(userService.getUser().getId())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(new SendMessage(false, "Rating already exists!", rating1));
             }
@@ -110,7 +110,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SendMessage(false, "BAD Rating", rating));
     }
 
-    public ResponseEntity<?> getDoctorId(Integer id) {
+    public ResponseEntity<?> getDoctorId(Long id) {
         Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
         if (optionalDoctor.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Doctor not found!", id));
@@ -126,7 +126,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.FOUND).body(optionalDoctor.get());
     }
 
-    public ResponseEntity<?> update(Integer id, DoctorDto dto) {
+    public ResponseEntity<?> update(Long id, DoctorDto dto) {
         Role role = userService.getRole();
         if (!role.equals(Role.ADMIN)) {
             return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
@@ -164,7 +164,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SendMessage(true, "Doctor successfully update!", doctor));
     }
 
-    public ResponseEntity<?> delete(Integer id) {
+    public ResponseEntity<?> delete(Long id) {
         Role role = userService.getRole();
         if (!role.equals(Role.ADMIN)) {
             return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));

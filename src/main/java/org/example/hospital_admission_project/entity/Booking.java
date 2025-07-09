@@ -13,9 +13,9 @@ import org.example.hospital_admission_project.entity.enums.ConsultationStatus;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private Integer userId;
-    private Integer doctorId;
+    private Long id;
+    private Long userId;
+    private Long doctorId;
     private String reason;
     private String date;
     private String availableTimes;

@@ -12,6 +12,7 @@ import java.io.Serializable;
 public record SendMessage(boolean success, String message, Object data) implements Serializable {
 
     // Muvaffaqiyatli javob yaratish uchun yordamchi konstruktorlar:
+
     public static SendMessage success(String message) {
         return new SendMessage(true, message, null);
     }
@@ -21,10 +22,10 @@ public record SendMessage(boolean success, String message, Object data) implemen
     }
 
     // Xato bo'lgan javoblar uchun yordamchi konstruktorlar:
+
     public static SendMessage failure(String message) {
         return new SendMessage(false, message, null);
     }
-
     public static SendMessage failure(String message, Object data) {
         return new SendMessage(false, message, data);
     }

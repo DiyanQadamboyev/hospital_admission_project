@@ -16,11 +16,11 @@ public class DoctorDetailsController {
     private final DoctorDetailsService doctorDetailsService;
 
     @PostMapping("/bookAppointment")
-    public ResponseEntity<?> bookAppointment(@RequestParam String date, @RequestParam String time, @RequestParam Integer doctorId) {
+    public ResponseEntity<?> bookAppointment(@RequestParam String date, @RequestParam String time, @RequestParam Long doctorId) {
         return doctorDetailsService.bookAppointment(date, time, doctorId);
     }
     @PostMapping("/findDoctorbyId")
-    public ResponseEntity<?> findDoctorbyId(@RequestParam Integer doctorId) {
+    public ResponseEntity<?> findDoctorbyId(@RequestParam Long doctorId) {
         return doctorDetailsService.findDoctorbyId(doctorId);
     }
 }

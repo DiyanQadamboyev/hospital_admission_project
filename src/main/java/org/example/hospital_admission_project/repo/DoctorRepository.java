@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
+    Optional<Doctor> findByName(String name);
+    List<Doctor> findByRatingBetween(Double minRating, Double maxRating);
+
     Optional<Doctor> findByEmail(String email);
 
-    List<Doctor> findByExpert_Id(Integer id);
+    Optional<Doctor> findById(Long id);
 
-    Optional<Doctor> findByName(String name);
-
-    List<Doctor> findByRatingBetween(double v, double v1);
+    List<Doctor> findByExpert_Id(Integer expertId);
 }

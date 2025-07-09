@@ -21,7 +21,7 @@ import java.util.List;
 public class Doctor implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String name;
     private String email;
     private String password;
@@ -57,5 +57,6 @@ public class Doctor implements UserDetails {
     public String getUsername() {
         return "";
     }
+
 
 }

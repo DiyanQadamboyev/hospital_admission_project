@@ -13,7 +13,7 @@ public class UserService {
     public Role getRole() {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         System.out.println("principal = " + principal);
-        return principal.getUserRole();
+        return principal.getRole();
     }
 
     public User getUser() {
