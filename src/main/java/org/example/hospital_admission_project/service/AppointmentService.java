@@ -25,7 +25,7 @@ public class AppointmentService {
     private final ConsultationRepository consultationRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
-    public ResponseEntity<?> createBooking(Integer doctorId, String reason) {
+    public ResponseEntity<?> createBooking(Long doctorId, String reason) {
         Optional<Doctor> optionalDoctor = doctorRepository.findById(doctorId);
         if (optionalDoctor.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Doctor not found", null));
@@ -33,7 +33,7 @@ public class AppointmentService {
 
         Doctor doctor = optionalDoctor.get();
         Consultation consultation = new Consultation();
-        consultation.setDoctorId(doctorId);
+        consultation.setDoctorId(Math.toIntExact(doctorId));
         consultation.setAdminPrice(1.0);
         consultation.setDiscount(0.0);
         consultation.setDoctorPrice(doctor.getConsultationPrice());
@@ -76,7 +76,7 @@ public class AppointmentService {
     }
 
     public ResponseEntity<?> cancelBooking(Integer bookingId) {
-        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+        Optional<Booking> optionalBooking = bookingRepository.findById(Long.valueOf(bookingId));
 
         if (optionalBooking.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Booking not found", null));

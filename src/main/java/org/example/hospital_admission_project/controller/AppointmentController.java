@@ -14,7 +14,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping("/booking")
-    public ResponseEntity<?> createBooking(@RequestParam Integer doctorId, @RequestParam String reason) {
+    public ResponseEntity<?> createBooking(@RequestParam Long doctorId, @RequestParam String reason) {
         return appointmentService.createBooking(doctorId, reason);
     }
 

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -178,4 +179,34 @@ public class AuthServiceImpl implements AuthService {
 
         return ResponseEntity.ok(SendMessage.success("Parol muvaffaqiyatli yangilandi"));
     }
+    @jakarta.transaction.Transactional
+    public ResponseEntity<?> processUser(Map<String, String> userInfo) {
+        String email = userInfo.get("email");
+        String name = userInfo.get("name");
+
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new SendMessage(false, "Email kiritilishi shart", null));
+        }
+
+        Optional<User> existingUser = userRepository.findByEmail(email);
+
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            String token = jwtProvider.generateToken(user.getEmail());
+            return ResponseEntity.ok(new SendMessage(true, "Foydalanuvchi tizimga kirdi", token));
+        } else {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setName(name != null ? name : "Noma'lum foydalanuvchi");
+            newUser.setPassword(passwordEncoder.encode("defaultPassword")); // Yangi parolni xavfsizroq boshqarish tavsiya etiladi
+            newUser.setRole(Role.USER);
+            userRepository.save(newUser);
+
+            String token = jwtProvider.generateToken(newUser.getEmail());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new SendMessage(true, "Yangi foydalanuvchi ro'yxatdan o'tdi va tizimga kirdi", token));
+        }
+    }
+
 }
