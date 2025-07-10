@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setUserRole(Role.USER);
-        user.setPassword(userDto.getPassword()); // Parolni encode qilish tavsiya etiladi
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -80,8 +80,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public ResponseEntity<?> forgetPassword(HttpSession session, String email) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty()) {
+     Optional<User> user= userRepository.findByEmail(email);
+        if (user.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(SendMessage.failure("Foydalanuvchi topilmadi"));
         }
@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
             message.setTo(email);
             message.setSubject("Parolni yangilash uchun tasdiqlash kodi");
             message.setText("Sizning tasdiqlash kodingiz: " + otpCode);
-            mailSender.send(message); // <<< JO'NATILAYAPTI
+            mailSender.send(message);
         } catch (MailException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(SendMessage.failure("Email yuborishda xatolik"));

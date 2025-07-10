@@ -45,7 +45,8 @@ public class Doctor implements UserDetails {
                     "17:00"
             ));
     private Double consultationPrice;
-    private String imageUrl;
+    @ManyToOne
+    private Attachment attachment;
     private String location;
     private Role role;
     @Override

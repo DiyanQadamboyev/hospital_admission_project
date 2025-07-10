@@ -2,38 +2,38 @@ package org.example.hospital_admission_project.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.example.hospital_admission_project.entity.Doctor;
 import org.example.hospital_admission_project.entity.User;
+import org.example.hospital_admission_project.entity.enums.Role;
+import org.example.hospital_admission_project.repo.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 
-import javax.crypto.SecretKey;
 import java.security.Key;
 
 import java.util.Date;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
     private final CustomUserDetailsService customUserDetailsService;
+    private final UserRepository userRepository;
 
     public String generateToken(String  email){
-        Long expireTimeout = (long) (20 * 24 * 60 * 60 * 1000);
-        Date date =new Date(System.currentTimeMillis()+ expireTimeout);
-        return Jwts
-                .builder()
-                .setIssuedAt(new Date())
-                .setSubject(email)
-                .setExpiration(date)
-                .setIssuer("https://www.google.com")
-                .signWith(getKey(), SignatureAlgorithm.HS256)
+        User user = userRepository.findByEmail(email);
+        return "Bearer " + Jwts.builder()
+                .subject(email)
+                .claim("id", user.getId())
+                .claim("role", user.getUserRole().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getKey())
                 .compact();
     }
     public void setUserToContext(String email) {

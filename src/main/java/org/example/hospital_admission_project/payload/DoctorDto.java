@@ -14,6 +14,6 @@ public class DoctorDto {
     private String phoneNumber;
     private Integer expertId;
     private Double consultationPrice;
-    private String imageUrl;
+    private Integer attachmentId;
     private String location;
 }

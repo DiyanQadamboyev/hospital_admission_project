@@ -1,12 +1,14 @@
 package org.example.hospital_admission_project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.hospital_admission_project.entity.Attachment;
 import org.example.hospital_admission_project.entity.Doctor;
 import org.example.hospital_admission_project.entity.Expert;
 import org.example.hospital_admission_project.entity.Rating;
 import org.example.hospital_admission_project.entity.enums.Role;
 import org.example.hospital_admission_project.entity.sendMessage.SendMessage;
 import org.example.hospital_admission_project.payload.DoctorDto;
+import org.example.hospital_admission_project.repo.AttachmentRepository;
 import org.example.hospital_admission_project.repo.DoctorRepository;
 import org.example.hospital_admission_project.repo.RatingRepository;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class DoctorService {
     private final ExpertService expertService;
     private final RatingRepository ratingRepository;
     private final RatingService ratingService;
+    private final AttachmentRepository attachmentRepository;
     public Doctor findDoctorName(String name) {
         Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
         return optionalDoctor.orElse(null);
@@ -76,8 +79,8 @@ public class DoctorService {
         rating.setOwnerRating(0.0);
         ratingRepository.save(rating);
         doctor.setRating(0.0);
-
-        doctor.setImageUrl(doctorDto.getImageUrl());
+        Attachment attachment = attachmentRepository.findById(doctorDto.getAttachmentId()).orElse(null);
+        doctor.setAttachment(attachment);
         doctor.setLocation(doctorDto.getLocation());
         doctorRepository.save(doctor);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SendMessage(true, "Doctor successfully saved!", doctor));
@@ -140,7 +143,7 @@ public class DoctorService {
         if (expert == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Expert not found!", dto.getExpertId()));
         }
-        if (dto.getName() == null | dto.getName().isBlank() | dto.getPassword() == null | dto.getPassword().isBlank() | dto.getLocation() == null | dto.getLocation().isBlank() | dto.getImageUrl() == null | dto.getImageUrl().isBlank() | dto.getPhoneNumber() == null | dto.getPhoneNumber().isBlank()) {
+        if (dto.getName() == null || dto.getName().isBlank() || dto.getPassword() == null || dto.getPassword().isBlank() || dto.getLocation() == null || dto.getLocation().isBlank() || dto.getAttachmentId() == null || dto.getAttachmentId().toString().isBlank() || dto.getPhoneNumber() == null || dto.getPhoneNumber().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SendMessage(false, " Name or password or location or image url or phone number is incorrect! ", dto));
         }
         Doctor doctor = optionalDoctor.get();
@@ -148,7 +151,8 @@ public class DoctorService {
         doctor.setEmail(dto.getEmail());
         doctor.setPassword(dto.getPassword());
         doctor.setExpert(expert);
-        doctor.setImageUrl(dto.getImageUrl());
+        Attachment attachment = attachmentRepository.findById(dto.getAttachmentId()).orElse(null);
+        doctor.setAttachment(attachment);
         doctor.setLocation(dto.getLocation());
         doctor.setPhoneNumber(dto.getPhoneNumber());
 

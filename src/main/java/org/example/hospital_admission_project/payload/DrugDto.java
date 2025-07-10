@@ -1,6 +1,5 @@
 package org.example.hospital_admission_project.payload;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleDTO {
+public class DrugDto {
     private String name;
     private String description;
-    private String ImageUrl;
+    private Double price;
+    private Integer quantity;
     private Integer categoryId;
-
+    private String DrugUnit;
+    private Double rating;
 }

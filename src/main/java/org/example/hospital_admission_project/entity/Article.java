@@ -18,7 +18,8 @@ public class Article {
     @Column(nullable = false, updatable = false)
     private Date date;
     private String description;
-    private String ImageUrl;
+    @ManyToOne
+    private Attachment attachment;
     @ManyToOne
     private ArticleCategory category;
 

@@ -5,14 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDTO {
-    private  Long id;
+    private Integer id;
     private Double subtotal;
     private Double taxes;
     private Double total;
-    private Long<MyCartDrugsDTO> drugs = new ArrayList<>();
+    private List<MyCartDrugsDTO> drugs=new ArrayList<>();
 }

@@ -23,7 +23,6 @@ import java.util.Optional;
 public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final ConsultationRepository consultationRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
     public ResponseEntity<?> createBooking(Integer doctorId, String reason) {
