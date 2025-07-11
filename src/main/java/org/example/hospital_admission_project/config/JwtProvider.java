@@ -6,7 +6,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.example.hospital_admission_project.entity.Doctor;
 import org.example.hospital_admission_project.entity.User;
-import org.example.hospital_admission_project.entity.enums.Role;
 import org.example.hospital_admission_project.repo.UserRepository;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +16,6 @@ import java.security.Key;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -26,11 +24,11 @@ public class JwtProvider {
     private final UserRepository userRepository;
 
     public String generateToken(String  email){
-        User user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         return "Bearer " + Jwts.builder()
                 .subject(email)
-                .claim("id", user.getId())
-                .claim("role", user.getUserRole().toString())
+                .claim("id", user.get().getId())
+                .claim("role",user.get().getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getKey())
@@ -64,7 +62,9 @@ public class JwtProvider {
         return Jwts.parser()
                 .setSigningKey(getKey())
                 .build()
-                .parseClaimsJws(token).getBody();
+                .parseClaimsJws(token.replace("Bearer ", ""))
+                .getBody();
+
     }
     public Key getKey(){
             return Keys.hmacShaKeyFor("secr213frvdqw1er23fg3tvewfq3grtvefcdet".getBytes());

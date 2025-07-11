@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface DrugsRepository extends JpaRepository<Product, Long> {
+public interface DrugsRepository extends JpaRepository<Product, Integer> {
 
     List<Product> findProductsByCategory(Category category);
 }

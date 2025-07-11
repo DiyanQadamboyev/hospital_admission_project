@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiConstants.API_PATH+ApiConstants.API_VERSION)
+@RequestMapping(ApiConstants.API_PATH+ApiConstants.API_VERSION+"/doctor")
 @RequiredArgsConstructor
 public class ArticleCRUDController {
     private final ArticleCRUDService service;

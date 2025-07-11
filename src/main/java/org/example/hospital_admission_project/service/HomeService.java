@@ -19,7 +19,7 @@ import java.util.List;
 public class HomeService {
     private final DoctorRepository doctorRepository;
     private final DoctorService doctorService;
-    private final ProductService productService;
+    private final DrugsService productService;
     private final CategoryService categoryService;
     private final ExpertService expertService;
     private final DrugsRepository drugsRepository;

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ConfirmationCodeRepository extends JpaRepository<ConfirmationCode, Long> {
+public interface ConfirmationCodeRepository extends JpaRepository<ConfirmationCode, Integer> {
     Optional<ConfirmationCode> findByEmail(String email);
 
     Optional<ConfirmationCode> findByEmailAndCode(String email, String code);

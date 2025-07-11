@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-    private Long senderId;
-    private Long receiverId;
+    private Integer Id;
+    private Integer senderId;
+    private Integer receiverId;
     private String message;
     private LocalDateTime dateTime;
 }

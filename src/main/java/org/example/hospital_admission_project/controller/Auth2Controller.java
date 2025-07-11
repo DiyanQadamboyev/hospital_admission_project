@@ -3,7 +3,9 @@ package org.example.hospital_admission_project.controller;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import lombok.RequiredArgsConstructor;
 import org.example.hospital_admission_project.entity.sendMessage.SendMessage;
-import org.example.hospital_admission_project.service.UserService;
+import org.example.hospital_admission_project.service.GoogleTokenValidator;
+import org.example.hospital_admission_project.service.impl.AuthServiceImpl;
+import org.example.hospital_admission_project.utils.ApiConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping
 @RestController
 @RequiredArgsConstructor
-public class OAuth2Controller {
+@RequestMapping(ApiConstants.API_PATH+ApiConstants.API_VERSION+"/oauth2")
+public class Auth2Controller {
 
     private final GoogleTokenValidator googleTokenValidator;
     private final AuthServiceImpl authService;

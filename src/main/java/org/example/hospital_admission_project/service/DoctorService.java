@@ -1,10 +1,7 @@
 package org.example.hospital_admission_project.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.hospital_admission_project.entity.Attachment;
-import org.example.hospital_admission_project.entity.Doctor;
-import org.example.hospital_admission_project.entity.Expert;
-import org.example.hospital_admission_project.entity.Rating;
+import org.example.hospital_admission_project.entity.*;
 import org.example.hospital_admission_project.entity.enums.Role;
 import org.example.hospital_admission_project.entity.sendMessage.SendMessage;
 import org.example.hospital_admission_project.payload.DoctorDto;
@@ -53,7 +50,7 @@ public class DoctorService {
         if (expert == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Expert not found!", doctorDto.getExpertId()));
         }
-        if (doctorDto.getName() == null | doctorDto.getName().isBlank() | doctorDto.getPassword() == null | doctorDto.getPassword().isBlank() | doctorDto.getLocation() == null | doctorDto.getLocation().isBlank() | doctorDto.getImageUrl() == null | doctorDto.getImageUrl().isBlank() | doctorDto.getPhoneNumber() == null | doctorDto.getPhoneNumber().isBlank()) {
+        if (doctorDto.getName() == null || doctorDto.getName().isBlank() || doctorDto.getPassword() == null || doctorDto.getPassword().isBlank() || doctorDto.getLocation() == null || doctorDto.getLocation().isBlank() || doctorDto.getAttachmentId() == null | doctorDto.getAttachmentId().toString().isBlank() || doctorDto.getPhoneNumber() == null || doctorDto.getPhoneNumber().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SendMessage(false, " Name or password or location or image url or phone number is incorrect! ", doctorDto));
         }
         Optional<Doctor> byEmail = doctorRepository.findByEmail(doctorDto.getEmail());
@@ -86,7 +83,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.CREATED).body(new SendMessage(true, "Doctor successfully saved!", doctor));
     }
 
-    public ResponseEntity<?> addRating(Long doctorId, Double rating) {
+    public ResponseEntity<?> addRating(Integer doctorId, Double rating) {
 
         Optional<Doctor> optionalDoctor = doctorRepository.findById(doctorId);
         if (optionalDoctor.isEmpty()) {
@@ -95,7 +92,7 @@ public class DoctorService {
         Doctor doctor = optionalDoctor.get();
         Optional<Rating> optionalRating = ratingRepository.findByOwnerId(doctorId);
         Rating rating1 = optionalRating.get();
-        for (Long l : rating1.getUsersId()) {
+        for (Integer l : rating1.getUsersId()) {
             if (l.equals(userService.getUser().getId())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(new SendMessage(false, "Rating already exists!", rating1));
             }
@@ -113,7 +110,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SendMessage(false, "BAD Rating", rating));
     }
 
-    public ResponseEntity<?> getDoctorId(Long id) {
+    public ResponseEntity<?> getDoctorId(Integer id) {
         Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
         if (optionalDoctor.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Doctor not found!", id));
@@ -129,7 +126,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.FOUND).body(optionalDoctor.get());
     }
 
-    public ResponseEntity<?> update(Long id, DoctorDto dto) {
+    public ResponseEntity<?> update(Integer id, DoctorDto dto) {
         Role role = userService.getRole();
         if (!role.equals(Role.ADMIN)) {
             return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
@@ -168,7 +165,7 @@ public class DoctorService {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SendMessage(true, "Doctor successfully update!", doctor));
     }
 
-    public ResponseEntity<?> delete(Long id) {
+    public ResponseEntity<?> delete(Integer id) {
         Role role = userService.getRole();
         if (!role.equals(Role.ADMIN)) {
             return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));

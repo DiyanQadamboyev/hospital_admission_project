@@ -33,4 +33,12 @@ public class PharmacyService {
         return ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "Drugs found by Drug name", productListBYProductName));
 
     }
+
+    public ResponseEntity<?> findDrugbydrugId(Integer doriId) {
+        return drugsService.getProductId(doriId);
+    }
+
+    public ResponseEntity<?> getAllDrugs() {
+        return drugsService.getAll();
+    }
 }

@@ -49,7 +49,7 @@ public class ArticleCRUDService {
         if (articleCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Article Category not found!", dto.getCategoryId()));
         }
-        if (dto.getName() == null || dto.getName().isBlank() || dto.getDescription() == null || dto.getDescription().isBlank() || dto.getAttachmentId().toString().isBlank() || dto.getAttachmentId() == null) {
+        if (dto.getName() == null || dto.getName().isBlank() || dto.getDescription() == null || dto.getDescription().isBlank() || dto.getAttachmentId().toString().isBlank()) {
             return ResponseEntity.badRequest().body(new SendMessage(false, "Name or Description or Image url cannot be empty!", dto));
         }
         Optional<Article> name = articleRepository.findByName(dto.getName());

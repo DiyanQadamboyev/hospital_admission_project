@@ -30,12 +30,12 @@ public class DoctorController {
     }
 
     @PostMapping("/add/rating")
-    public ResponseEntity<?> addRating(@RequestParam Long DoctorId, @RequestParam Double Rating) {
+    public ResponseEntity<?> addRating(@RequestParam Integer DoctorId, @RequestParam Double Rating) {
         return service.addRating(DoctorId,Rating);
     }
 
     @GetMapping("/find-by-id")
-    public ResponseEntity<?> getDoctorId(@RequestParam Long id) {
+    public ResponseEntity<?> getDoctorId(@RequestParam Integer id) {
         return service.getDoctorId(id);
     }
 
@@ -45,12 +45,12 @@ public class DoctorController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestParam Long id, @RequestBody DoctorDto dto) {
+    public ResponseEntity<?> update(@RequestParam Integer id, @RequestBody DoctorDto dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long id) {
+    public ResponseEntity<?> delete(@RequestParam Integer id) {
         return service.delete(id);
     }
 }

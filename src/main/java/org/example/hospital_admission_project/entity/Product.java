@@ -12,13 +12,13 @@ import lombok.*;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String name;
     private String description;
     private Double price;
     private Integer quantity;
     @ManyToOne
-    private FileStorage fileStorage;
+    private Attachment attachment;
     @ManyToOne
     private Category category;
     private String drugUnit;

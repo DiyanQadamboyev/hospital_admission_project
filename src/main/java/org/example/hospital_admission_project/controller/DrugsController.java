@@ -13,24 +13,25 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class DrugsController {
     private final DrugsService service;
+
+
     @GetMapping("/get/all")
     public ResponseEntity<?> getProducts() {
         return service.getAll();
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@ModelAttribute DrugDto dto, @RequestParam("file") MultipartFile multipartFile) {
-
-        return service.save(dto,multipartFile);
+    public ResponseEntity<?> addProduct(@ModelAttribute DrugDto dto) {
+        return service.save(dto);
     }
 
     @PostMapping("/add/rating")
-    public ResponseEntity<?> addRating(@RequestParam Long DrugId, @RequestParam Double rating) {
+    public ResponseEntity<?> addRating(@RequestParam Integer DrugId, @RequestParam Double rating) {
         return service.addRating(DrugId,rating);
     }
 
     @GetMapping("/find-by-id/{id}")
-    public ResponseEntity<?> getProduct(@PathVariable Long id) {
+    public ResponseEntity<?> getProduct(@PathVariable Integer id) {
         return service.getProductId(id);
     }
 
@@ -40,12 +41,12 @@ public class DrugsController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody DrugDTO dto) {
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody DrugDto dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer id) {
         return service.delete(id);
     }
 

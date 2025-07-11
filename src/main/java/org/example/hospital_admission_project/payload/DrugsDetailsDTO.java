@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DrugsDetailsDTO {
     private Long drugId;
-    private String imageUrl;
+    private Integer attachmentId;
     private String drugName;
     private String drugUnit;
     private String description;

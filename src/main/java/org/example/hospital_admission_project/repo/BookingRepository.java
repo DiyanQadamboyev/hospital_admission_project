@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookingRepository extends JpaRepository<Booking, Long> {
-    Optional<Booking> findByUserIdAndDoctorId(Long userId, Long doctorId);
+public interface BookingRepository extends JpaRepository<Booking, Integer> {
+    Optional<Booking> findByUserIdAndDoctorId(Integer userId, Integer doctorId);
 
-    List<Booking> findByUserId(Long userId);
+    List<Booking> findByUserId(Integer userId);
 
     List<Booking> findByStatus(ConsultationStatus consultationStatus);
 

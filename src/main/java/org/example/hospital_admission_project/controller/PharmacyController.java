@@ -19,7 +19,7 @@ public class PharmacyController {
     }
 
     @PostMapping("/find/byDoriId")
-    public ResponseEntity<?> findByDoriID(@RequestParam Long DoriId) {
+    public ResponseEntity<?> findByDoriID(@RequestParam Integer DoriId) {
         return pharmacyService.findDrugbydrugId(DoriId);
     }
 

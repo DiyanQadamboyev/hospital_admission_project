@@ -14,5 +14,6 @@ public class DrugDto {
     private Integer quantity;
     private Integer categoryId;
     private String DrugUnit;
+    private Integer attachmentId;
     private Double rating;
 }
