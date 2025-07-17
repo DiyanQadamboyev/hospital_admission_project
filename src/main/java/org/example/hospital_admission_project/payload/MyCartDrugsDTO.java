@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class MyCartDrugsDTO {
     private Integer id;
     private String name;
-    private String imageUrl;
+    private Integer attachmentId;
     private String drugUnit;
     private Double price;
     private Double totalPrice;

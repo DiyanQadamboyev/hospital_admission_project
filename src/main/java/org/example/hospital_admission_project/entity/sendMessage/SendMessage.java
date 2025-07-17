@@ -12,7 +12,6 @@ import java.io.Serializable;
 public record SendMessage(boolean success, String message, Object data) implements Serializable {
 
     // Muvaffaqiyatli javob yaratish uchun yordamchi konstruktorlar:
-
     public static SendMessage success(String message) {
         return new SendMessage(true, message, null);
     }

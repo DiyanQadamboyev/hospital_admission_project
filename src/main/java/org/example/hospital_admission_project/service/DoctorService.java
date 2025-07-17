@@ -10,6 +10,7 @@ import org.example.hospital_admission_project.repo.DoctorRepository;
 import org.example.hospital_admission_project.repo.RatingRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class DoctorService {
     private final RatingRepository ratingRepository;
     private final RatingService ratingService;
     private final AttachmentRepository attachmentRepository;
+
     public Doctor findDoctorName(String name) {
         Optional<Doctor> optionalDoctor = doctorRepository.findByName(name);
         return optionalDoctor.orElse(null);
@@ -40,12 +42,8 @@ public class DoctorService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "all doctors!", all));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(DoctorDto doctorDto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         Expert expert = expertService.getId(doctorDto.getExpertId());
         if (expert == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Expert not found!", doctorDto.getExpertId()));
@@ -98,7 +96,7 @@ public class DoctorService {
             }
 
         }
-        if (rating > 0 | rating < 6) {
+        if (rating > 0 || rating < 6) {
             rating1.getRatings().add(rating);
             rating1.getUsersId().add(userService.getUser().getId());
             rating1.setOwnerRating(ratingService.ratingService(rating1));
@@ -125,12 +123,8 @@ public class DoctorService {
         }
         return ResponseEntity.status(HttpStatus.FOUND).body(optionalDoctor.get());
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(Integer id, DoctorDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         Optional<Doctor> optionalDoctor = doctorRepository.findById(id);
         Expert expert = expertService.getId(dto.getExpertId());
 
@@ -164,12 +158,8 @@ public class DoctorService {
         doctorRepository.save(doctor);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SendMessage(true, "Doctor successfully update!", doctor));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(Integer id) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         doctorRepository.findById(id).ifPresent(doctorRepository::delete);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new SendMessage(true, "Doctor successfully delete!", id));
     }

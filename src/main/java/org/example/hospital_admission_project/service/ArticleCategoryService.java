@@ -8,6 +8,7 @@ import org.example.hospital_admission_project.payload.ArticleCategoryDto;
 import org.example.hospital_admission_project.repo.ArticleCategoryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,12 +38,8 @@ public class ArticleCategoryService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "All ArticleCategory", all));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(ArticleCategoryDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         ArticleCategory category = new ArticleCategory();
         if (dto.getName() == null | dto.getName().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SendMessage(false, "Name is required!", dto));
@@ -70,12 +67,8 @@ public class ArticleCategoryService {
         }
         return ResponseEntity.status(HttpStatus.OK).body(byName);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(Integer id, ArticleCategoryDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         Optional<ArticleCategory> optionalArticleCategory = articleCategoryRepository.findById(id);
         if (optionalArticleCategory.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "ArticleCategory not found!", id));
@@ -89,12 +82,8 @@ public class ArticleCategoryService {
         return ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "ArticleCategory successfully updated!", category));
 
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(Integer id) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         articleCategoryRepository.findById(id).ifPresent(articleCategoryRepository::delete);
         return ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "ArticleCategory successfully deleted!", id));
 

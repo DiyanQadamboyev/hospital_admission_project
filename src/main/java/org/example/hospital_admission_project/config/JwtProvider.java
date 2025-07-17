@@ -25,12 +25,12 @@ public class JwtProvider {
 
     public String generateToken(String  email){
         Optional<User> user = userRepository.findByEmail(email);
-        return "Bearer " + Jwts.builder()
+        return  Jwts.builder()
                 .subject(email)
                 .claim("id", user.get().getId())
                 .claim("role",user.get().getRole())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000))
                 .signWith(getKey())
                 .compact();
     }

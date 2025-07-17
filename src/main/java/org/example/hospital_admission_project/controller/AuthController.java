@@ -17,10 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static org.example.hospital_admission_project.utils.ApiConstants.API_PATH;
 
 @RestController
-@RequestMapping(ApiConstants.API_PATH + ApiConstants.API_VERSION)
+@RequestMapping(ApiConstants.API_PATH + ApiConstants.API_VERSION+"/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -38,26 +40,32 @@ public class AuthController {
             return authService.login(loginDto);
         }
     @PostMapping("/forget-password")
-    public ResponseEntity<?> forgetPassword(@RequestParam String email) {
+    public ResponseEntity<?> forgetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
         return authService.forgetPassword(session, email);
     }
     @PostMapping("/check-code")
-    public ResponseEntity<?> checkCode(@RequestParam String code) {
+    public ResponseEntity<?> checkCode(@RequestBody Map<String, String> request) {
+        String code = request.get("code");
         return authService.checkCode(session, code);
     }
+
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String newPassword, @RequestParam String confirmPassword) {
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+        String confirmPassword = request.get("confirmPassword");
         return authService.resetPassword(session, newPassword, confirmPassword);
     }
+
     @GetMapping("/auth2/callback/google")
     @OAuth2LoginSecurityMarker
     public ResponseEntity<?> googleLogin(@AuthenticationPrincipal OAuth2User oauth2User) {
-        String username = oauth2User.getAttribute("email"); // Or any other unique identifier
+        String username = oauth2User.getAttribute("email");
         User user = userRepository.findByEmail(username).orElse(null);
         if (user == null) {
             user = new User();
             user.setEmail(username);
-            user.setPassword(passwordEncoder.encode("defaultPassword")); // Set a default password for the user
+            user.setPassword(passwordEncoder.encode("defaultPassword"));
             user.setName(oauth2User.getAttribute("name"));
             userRepository.save(user);
         }

@@ -1,4 +1,5 @@
 package org.example.hospital_admission_project.service;
+
 import org.example.hospital_admission_project.entity.Category;
 import org.example.hospital_admission_project.entity.enums.Role;
 import org.example.hospital_admission_project.entity.sendMessage.SendMessage;
@@ -6,7 +7,9 @@ import org.example.hospital_admission_project.payload.CategoryDTO;
 import org.example.hospital_admission_project.repo.CategoryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -80,11 +83,8 @@ public class CategoryService {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(Integer id) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         categoryRepository.findById(id).ifPresent(categoryRepository::delete);
         return ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "Category successfully deleted!", id));
     }

@@ -119,34 +119,6 @@ public class AuthServiceImpl implements AuthService {
         return ResponseEntity.ok(SendMessage.success("Tasdiqlash kodi yuborildi"));
     }
 
-
-    @Override
-    @Transactional
-    public ResponseEntity<?> checkCode(HttpSession session, String code) {
-        String email = (String) session.getAttribute("email");
-        if (email == null) {
-            return ResponseEntity.badRequest()
-                    .body(SendMessage.failure("Email topilmadi"));
-        }
-
-        Optional<ConfirmationCode> codeOpt = confirmationCodeRepository.findByEmailAndCode(email, code);
-        if (codeOpt.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(SendMessage.failure("Noto'g'ri yoki mavjud bo'lmagan tasdiqlash kodi"));
-        }
-
-        ConfirmationCode confirmationCode = codeOpt.get();
-        if (confirmationCode.getConfirmationDate().isBefore(Instant.now())) {
-            return ResponseEntity.badRequest()
-                    .body(SendMessage.failure("Kod muddati o'tgan"));
-        }
-
-        session.setAttribute("codeVerified", true);
-        confirmationCodeRepository.delete(confirmationCode);
-
-        return ResponseEntity.ok(SendMessage.success("Kod muvaffaqiyatli kiritildi"));
-    }
-
     @Override
     @Transactional
     public ResponseEntity<?> resetPassword(HttpSession session, String newPassword, String confirmPassword) {
@@ -179,7 +151,32 @@ public class AuthServiceImpl implements AuthService {
 
         return ResponseEntity.ok(SendMessage.success("Parol muvaffaqiyatli yangilandi"));
     }
-    @jakarta.transaction.Transactional
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> checkCode(HttpSession session, String code) {
+        String email = (String) session.getAttribute("email");
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(SendMessage.failure("Sessionda email topilmadi"));
+        }
+        Optional<ConfirmationCode> codeOpt = confirmationCodeRepository.findByEmailAndCode(email, code);
+        if (codeOpt.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(SendMessage.failure("Noto'g'ri yoki mavjud bo'lmagan tasdiqlash kodi"));
+        }
+        ConfirmationCode confirmationCode = codeOpt.get();
+        if (confirmationCode.getConfirmationDate().isBefore(Instant.now())) {
+            return ResponseEntity.badRequest()
+                    .body(SendMessage.failure("Kod muddati o'tgan"));
+        }
+        session.setAttribute("codeVerified", true);
+
+        return ResponseEntity.ok(SendMessage.success("Kod muvaffaqiyatli tasdiqlandi"));
+    }
+
+
+    @Transactional
     public ResponseEntity<?> processUser(Map<String, String> userInfo) {
         String email = userInfo.get("email");
         String name = userInfo.get("name");

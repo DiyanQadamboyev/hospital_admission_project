@@ -10,9 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
+import static org.example.hospital_admission_project.utils.ApiConstants.API_PATH;
+import static org.example.hospital_admission_project.utils.ApiConstants.API_VERSION;
+
 @MultipartConfig
 @RestController
-@RequestMapping()
+@RequestMapping(API_PATH + API_VERSION + "/file")
 @RequiredArgsConstructor
 public class AttachmentController {
     private final AttachmentService attachmentService;

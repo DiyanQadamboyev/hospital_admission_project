@@ -11,6 +11,7 @@ import org.example.hospital_admission_project.repo.ArticleRepository;
 import org.example.hospital_admission_project.repo.AttachmentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -39,12 +40,8 @@ public class ArticleCRUDService {
                 new SendMessage(true, "Article found!", article))).orElseGet(() ->
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Article not found!", name)));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(ArticleDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         ArticleCategory articleCategory = articleCategoryService.getId(dto.getCategoryId());
         if (articleCategory == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Article Category not found!", dto.getCategoryId()));
@@ -74,12 +71,8 @@ public class ArticleCRUDService {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new SendMessage(false, "Article not found!", id)));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(Integer id, ArticleDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", role));
-        }
         Optional<Article> optionalArticle = articleRepository.findById(id);
         ArticleCategory articleCategory = articleCategoryService.getId(dto.getCategoryId());
 
@@ -105,12 +98,8 @@ public class ArticleCRUDService {
         articleRepository.save(article);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SendMessage(true, "Article successfully updated!", article));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(Integer id) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", role));
-        }
         Optional<Article> optionalArticle = articleRepository.findById(id);
         if (optionalArticle.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Article not found!", id));

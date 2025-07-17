@@ -16,10 +16,11 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ElementCollection
-    private List<Integer> usersId;
+    private List<Double> ratings = new ArrayList<>();
+    @ElementCollection
+    private List<Integer> usersId = new ArrayList<>();
     private Integer ownerId;
     private Double ownerRating;
-    @ElementCollection
-    private List<Double> ratings = new ArrayList<>();
+
 }
 

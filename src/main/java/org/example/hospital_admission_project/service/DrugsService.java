@@ -11,6 +11,7 @@ import org.example.hospital_admission_project.repo.ProductRepository;
 import org.example.hospital_admission_project.repo.RatingRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,12 +31,8 @@ public class DrugsService {
     public List<Product> getProductListBYProductName(String text) {
         return productRepository.findAllByName(text);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(DrugDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", null));
-        }
         Category category = categoryService.getId(dto.getCategoryId());
         if (category == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Category not found!", dto.getCategoryId()));
@@ -124,12 +121,8 @@ public class DrugsService {
         Optional<Product> optionalProducts = productRepository.findByName(name);
         return optionalProducts.map(product -> ResponseEntity.status(HttpStatus.OK).body(new SendMessage(true, "Product found!", product))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Product not found!", name)));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(Integer id, DrugDto dto) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", role));
-        }
         Optional<Product> optionalProduct = productRepository.findById(id);
 
         Category category = categoryService.getId(dto.getCategoryId());
@@ -172,12 +165,8 @@ public class DrugsService {
         productRepository.save(product);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new SendMessage(true, "Product successfully updated!", product));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(Integer id) {
-        Role role = userService.getRole();
-        if (!role.equals(Role.ADMIN)) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Faqat Admin huquqi bor! ", role));
-        }
         productRepository.findById(id).ifPresent(productRepository::delete);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new SendMessage(true, "Product deleted!", id));
     }
