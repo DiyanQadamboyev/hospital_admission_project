@@ -21,7 +21,7 @@ public class DrugsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@ModelAttribute DrugDto dto) {
+    public ResponseEntity<?> addProduct(@RequestBody DrugDto dto) {
         return service.save(dto);
     }
 

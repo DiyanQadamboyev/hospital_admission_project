@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,42 +34,51 @@ public class DrugsService {
     }
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(DrugDto dto) {
-        Category category = categoryService.getId(dto.getCategoryId());
-        if (category == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Category not found!", dto.getCategoryId()));
+        if (dto.getCategoryId() == null) {
+            return ResponseEntity.badRequest().body(new SendMessage(false, "CategoryId is required!", null));
         }
-        if (dto.getName() == null || dto.getName().isBlank() || dto.getDescription() == null || dto.getDescription().isBlank() || dto.getDrugUnit().isBlank() || dto.getAttachmentId().toString().isEmpty()) {
-            return ResponseEntity.badRequest().body(new SendMessage(false, "Name or Description or Image url or Drug Unit cannot be empty!", dto));
+        if (dto.getName() == null || dto.getName().isBlank()
+            || dto.getDescription() == null || dto.getDescription().isBlank()
+            || dto.getDrugUnit() == null || dto.getDrugUnit().isBlank()
+            || dto.getAttachmentId() == null) {
+            return ResponseEntity.badRequest().body(new SendMessage(false, "Name, Description, DrugUnit, or AttachmentId cannot be empty!", dto));
         }
-        Optional<Product> name = productRepository.findByName(dto.getName());
-        if (name.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SendMessage(false, "Product already exist!", dto.getName()));
+        Category category;
+        try {
+            category = categoryService.getId(dto.getCategoryId());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Invalid categoryId: null", dto.getCategoryId()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, e.getMessage(), dto.getCategoryId()));
         }
-
+        if (productRepository.findByName(dto.getName()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SendMessage(false, "Product already exists!", dto.getName()));
+        }
+        Attachment attachment = attachmentRepository.findById(dto.getAttachmentId()).orElse(null);
+        if (attachment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new SendMessage(false, "Attachment not found!", dto.getAttachmentId()));
+        }
         Product product = new Product();
-        productRepository.save(product);
         product.setName(dto.getName());
         product.setCategory(category);
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setDrugUnit(dto.getDrugUnit());
         product.setQuantity(dto.getQuantity());
-        Attachment attachment = attachmentRepository.findById(dto.getAttachmentId()).orElse(null);
         product.setAttachment(attachment);
-        if (dto.getRating() < 0 | dto.getRating() > 5) {
+        product = productRepository.save(product);
+        if (dto.getRating() < 0 || dto.getRating() > 5) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SendMessage(false, "Rating is out of range!", dto));
         }
-
         Rating rating = new Rating();
-        ratingRepository.save(rating);
-        rating.getRatings().add(dto.getRating());
+        rating.setRatings(new ArrayList<>(List.of(dto.getRating())));
         rating.setOwnerId(product.getId());
         rating.setOwnerRating(ratingService.ratingService(rating));
+
         ratingRepository.save(rating);
         product.setRating(rating.getOwnerRating());
-
-//        product.setFileStorage(fileStorageService.save(dto.getFileStorage()));
         productRepository.save(product);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new SendMessage(true, "Product saved!", product));
     }
 

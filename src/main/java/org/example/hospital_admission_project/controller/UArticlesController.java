@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiConstants.API_PATH + ApiConstants.API_VERSION + "/user/articles/")
+@RequestMapping(ApiConstants.API_PATH + ApiConstants.API_VERSION + "/user/articles")
 @RequiredArgsConstructor
 public class UArticlesController {
 
     private final ArticleService articleService;
 
-    @PostMapping("/search{SearchText}")
+    @PostMapping("/search/{SearchText}")
     public ResponseEntity<?> searchArticle(@PathVariable String SearchText) {
         return articleService.search(SearchText);
     }

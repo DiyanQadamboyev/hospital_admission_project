@@ -13,7 +13,7 @@ public class DrugDto {
     private Double price;
     private Integer quantity;
     private Integer categoryId;
-    private String DrugUnit;
+    private String drugUnit;
     private Integer attachmentId;
     private Double rating;
 }
