@@ -72,5 +72,12 @@ public class AuthController {
         String token = jwtProvider.generateToken(user.getEmail());
         return ResponseEntity.ok().body("JWT Token: " + token);
     }
-
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal OAuth2User oauth2User, HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Logged out and session invalidated!"
+        ));
     }
+}

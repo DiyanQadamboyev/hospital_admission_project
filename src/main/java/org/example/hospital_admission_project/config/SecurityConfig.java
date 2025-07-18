@@ -38,6 +38,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/v1/auth/auth2/callback/google"
+
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/file/**").permitAll()
                         .anyRequest().authenticated()
